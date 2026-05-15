@@ -8,8 +8,8 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, 'Segoe UI', sans-serif;
-      background: #0f1117;
+      font-family: -apple-system, "Segoe UI", sans-serif;
+      background: #0d0d0d;
       color: white;
       height: 100vh;
       overflow: hidden;
@@ -17,60 +17,73 @@
       flex-direction: column;
     }
 
-    /* HEADER */
     .header {
-      background: #1a1a2e;
-      padding: 14px 32px;
+      background: linear-gradient(90deg, #1a1a1a 0%, #1e1e1e 100%);
+      padding: 12px 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #2a2a4a;
+      border-bottom: 2px solid #e85d04;
       flex-shrink: 0;
     }
-    .header-left { display: flex; align-items: center; gap: 16px; }
-    .logo { font-size: 13px; color: #7c8cff; letter-spacing: 3px; text-transform: uppercase; }
-    .title { font-size: 22px; font-weight: 600; }
-    .header-right { display: flex; align-items: center; gap: 24px; }
-    .date-display { font-size: 16px; color: #aaa; }
-    .clock { font-size: 28px; font-weight: 600; font-family: monospace; color: #7c8cff; }
-    .last-update { font-size: 12px; color: #666; }
-    .live-dot { display: inline-block; width: 8px; height: 8px; background: #22c55e; border-radius: 50%; margin-right: 6px; animation: pulse 2s infinite; }
+    .header-left { display: flex; align-items: center; gap: 20px; }
+    .logo-img { height: 44px; }
+    .header-divider { width: 1px; height: 40px; background: #333; }
+    .header-titles { }
+    .header-sub { font-size: 11px; color: #888; letter-spacing: 2px; text-transform: uppercase; }
+    .header-title { font-size: 20px; font-weight: 600; color: white; }
+    .header-right { display: flex; align-items: center; gap: 28px; }
+    .date-display { font-size: 14px; color: #aaa; text-align: right; }
+    .clock { font-size: 32px; font-weight: 700; font-family: monospace; color: #e85d04; }
+    .live-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: #1a2a1a; border: 1px solid #22c55e;
+      border-radius: 20px; padding: 4px 12px;
+      font-size: 11px; color: #22c55e;
+    }
+    .live-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-    /* MAIN */
     .main {
       display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 20px;
-      padding: 20px 32px;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 16px;
+      padding: 16px 28px;
       flex: 1;
       min-height: 0;
     }
 
-    /* PANEL */
     .panel {
-      background: #1a1a2e;
-      border-radius: 16px;
-      padding: 20px;
+      background: #161616;
+      border-radius: 14px;
+      padding: 18px 20px;
       display: flex;
       flex-direction: column;
-      border: 1px solid #2a2a4a;
+      border: 1px solid #2a2a2a;
       min-height: 0;
     }
     .panel-title {
-      font-size: 13px;
-      color: #7c8cff;
+      font-size: 11px;
+      color: #e85d04;
       letter-spacing: 2px;
       text-transform: uppercase;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-title::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #2a2a2a;
     }
 
-    /* RANKING */
     .ranking-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
       overflow: hidden;
       flex: 1;
     }
@@ -78,98 +91,75 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      background: #12122a;
+      background: #1e1e1e;
       border-radius: 10px;
-      padding: 10px 14px;
-      transition: all 0.3s;
-      flex-shrink: 0;
+      padding: 9px 14px;
+      border-left: 3px solid #2a2a2a;
+      transition: all 0.4s;
     }
-    .ranking-item.top1 { background: linear-gradient(90deg, #2d2a00, #12122a); border-left: 3px solid #f59e0b; }
-    .ranking-item.top2 { border-left: 3px solid #94a3b8; }
-    .ranking-item.top3 { border-left: 3px solid #cd7c3a; }
-    .rank-pos {
-      font-size: 18px;
-      font-weight: 700;
-      width: 28px;
-      text-align: center;
-      color: #666;
-      flex-shrink: 0;
-    }
-    .top1 .rank-pos { color: #f59e0b; }
-    .top2 .rank-pos { color: #94a3b8; }
-    .top3 .rank-pos { color: #cd7c3a; }
+    .ranking-item.top1 { background: #1e1800; border-left-color: #f59e0b; }
+    .ranking-item.top2 { background: #1a1a1e; border-left-color: #94a3b8; }
+    .ranking-item.top3 { background: #1c1510; border-left-color: #cd7c3a; }
+    .rank-pos { font-size: 18px; width: 30px; text-align: center; flex-shrink: 0; }
     .rank-info { flex: 1; min-width: 0; }
-    .rank-name { font-size: 15px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .rank-bar-wrap { height: 4px; background: #2a2a4a; border-radius: 2px; margin-top: 5px; }
-    .rank-bar { height: 4px; border-radius: 2px; background: #7c8cff; transition: width 0.5s ease; }
-    .top1 .rank-bar { background: #f59e0b; }
-    .rank-count {
-      font-size: 28px;
-      font-weight: 700;
-      font-family: monospace;
-      color: #7c8cff;
-      flex-shrink: 0;
-    }
+    .rank-name { font-size: 15px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #eee; }
+    .rank-bar-wrap { height: 3px; background: #2a2a2a; border-radius: 2px; margin-top: 5px; }
+    .rank-bar { height: 3px; border-radius: 2px; transition: width 0.6s ease; }
+    .top1 .rank-bar { background: linear-gradient(90deg, #f59e0b, #fcd34d); }
+    .top2 .rank-bar { background: linear-gradient(90deg, #94a3b8, #cbd5e1); }
+    .top3 .rank-bar { background: linear-gradient(90deg, #cd7c3a, #e8a96a); }
+    .rank-bar-default { background: linear-gradient(90deg, #e85d04, #ff8c42); }
+    .rank-count { font-size: 26px; font-weight: 700; font-family: monospace; flex-shrink: 0; color: #e85d04; }
     .top1 .rank-count { color: #f59e0b; }
-    .rank-label { font-size: 11px; color: #666; text-align: right; }
+    .top2 .rank-count { color: #94a3b8; }
+    .top3 .rank-count { color: #cd7c3a; }
+    .rank-label { font-size: 10px; color: #555; text-align: right; }
 
-    /* COLUMNA DERECHA */
-    .right-col {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      min-height: 0;
-    }
+    .right-col { display: flex; flex-direction: column; gap: 14px; min-height: 0; }
 
-    /* STATS TOP */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      flex-shrink: 0;
-    }
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; flex-shrink: 0; }
     .stat-card {
-      background: #1a1a2e;
+      background: #161616;
       border-radius: 12px;
       padding: 14px 16px;
-      border: 1px solid #2a2a4a;
+      border: 1px solid #2a2a2a;
+      border-top: 2px solid #e85d04;
     }
-    .stat-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-    .stat-value { font-size: 32px; font-weight: 700; font-family: monospace; color: #7c8cff; }
-    .stat-sub { font-size: 11px; color: #666; margin-top: 2px; }
+    .stat-label { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .stat-value { font-size: 34px; font-weight: 700; font-family: monospace; color: #e85d04; line-height: 1; }
+    .stat-sub { font-size: 11px; color: #555; margin-top: 4px; }
 
-    /* CHART */
-    .chart-panel {
-      flex: 1;
-      min-height: 0;
-    }
-    .chart-wrap { flex: 1; min-height: 0; position: relative; }
+    .chart-panel { flex: 1; min-height: 0; }
+    .chart-wrap { flex: 1; min-height: 0; position: relative; height: calc(100% - 32px); }
 
-    /* FOOTER */
     .footer {
       text-align: center;
-      padding: 8px;
-      font-size: 11px;
-      color: #333;
+      padding: 6px;
+      font-size: 10px;
+      color: #2a2a2a;
       flex-shrink: 0;
     }
-
-    .empty-state { color: #444; text-align: center; padding: 40px; font-size: 14px; }
+    .empty-state { color: #333; text-align: center; padding: 40px; font-size: 14px; }
   </style>
 </head>
 <body>
 
 <div class="header">
   <div class="header-left">
-    <div>
-      <div class="logo">Electricidad Nico</div>
-      <div class="title">Dashboard de Productividad</div>
+    <img class="logo-img" src="data:image/png;base64,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" alt="Electricidad Nico">
+    <div class="header-divider"></div>
+    <div class="header-titles">
+      <div class="header-sub">Sistema de gestión</div>
+      <div class="header-title">Dashboard de Productividad</div>
     </div>
   </div>
   <div class="header-right">
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      EN VIVO · <span id="lastUpdate">--</span>
+    </div>
     <div>
       <div class="date-display" id="dateDisplay"></div>
-      <div class="last-update"><span class="live-dot"></span>Actualiza cada 30s — Último: <span id="lastUpdate">--</span></div>
     </div>
     <div class="clock" id="clock"></div>
   </div>
@@ -177,7 +167,6 @@
 
 <div class="main">
 
-  <!-- RANKING DEL DÍA -->
   <div class="panel">
     <div class="panel-title">🏆 Ranking del día</div>
     <div class="ranking-list" id="rankingList">
@@ -185,10 +174,7 @@
     </div>
   </div>
 
-  <!-- DERECHA -->
   <div class="right-col">
-
-    <!-- STATS -->
     <div class="stats-row">
       <div class="stat-card">
         <div class="stat-label">Total hoy</div>
@@ -196,9 +182,9 @@
         <div class="stat-sub">pedidos completados</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Promedio por operario</div>
+        <div class="stat-label">Promedio operario</div>
         <div class="stat-value" id="statProm">0</div>
-        <div class="stat-sub">pedidos hoy</div>
+        <div class="stat-sub">pedidos por persona</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Hora pico</div>
@@ -207,56 +193,47 @@
       </div>
     </div>
 
-    <!-- GRÁFICO POR HORA -->
     <div class="panel chart-panel">
       <div class="panel-title">📊 Pedidos por hora — hoy</div>
       <div class="chart-wrap">
         <canvas id="horaChart"></canvas>
       </div>
     </div>
-
   </div>
 </div>
 
 <div class="footer">
-  Dashboard en vivo · <span id="footerDate"></span>
+  Electricidad Nico · Dashboard en vivo · <span id="footerDate"></span>
 </div>
 
 <script>
-const SHEETDB_URL = 'https://sheetdb.io/api/v1/oi23zwxnbbu67';
-const HOURS = ['08','09','10','11','12','13','14','15','16','17','18','19'];
-const LUNCH = ['13'];
-const EXTRA = ['08','18','19'];
+const SHEETDB_URL = "https://sheetdb.io/api/v1/oi23zwxnbbu67";
+const HOURS = ["06","07","08","09","10","11","12","13","14","15","16","17","18","19","20"];
+const LUNCH = ["13"];
+const EXTRA = ["06","07","08","18","19","20"];
 
 let horaChart = null;
 
-// RELOJ
 function updateClock() {
   const now = new Date();
-  document.getElementById('clock').textContent =
-    now.toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12: false });
-  const fecha = now.toLocaleDateString('es-AR', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-  document.getElementById('dateDisplay').textContent = fecha.charAt(0).toUpperCase() + fecha.slice(1);
-  document.getElementById('footerDate').textContent = now.toLocaleDateString('es-AR');
+  document.getElementById("clock").textContent =
+    now.toLocaleTimeString("es-AR", { hour:"2-digit", minute:"2-digit", second:"2-digit", hour12: false });
+  const fecha = now.toLocaleDateString("es-AR", { weekday:"long", year:"numeric", month:"long", day:"numeric" });
+  document.getElementById("dateDisplay").textContent = fecha.charAt(0).toUpperCase() + fecha.slice(1);
+  document.getElementById("footerDate").textContent = now.toLocaleDateString("es-AR");
 }
 setInterval(updateClock, 1000);
 updateClock();
 
-// OBTENER DATOS
 async function fetchData() {
   try {
-    const res = await fetch(SHEETDB_URL + '?limit=5000');
-    const data = await res.json();
-    return data;
-  } catch(e) {
-    return [];
-  }
+    const res = await fetch(SHEETDB_URL + "?limit=5000");
+    return await res.json();
+  } catch(e) { return []; }
 }
 
-// FILTRAR HOY
 function getToday() {
-  const now = new Date();
-  return now.toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit', year:'numeric' });
+  return new Date().toLocaleDateString("es-AR", { day:"2-digit", month:"2-digit", year:"numeric" });
 }
 
 function filterToday(data) {
@@ -264,96 +241,87 @@ function filterToday(data) {
   return data.filter(r => r.Fecha === today);
 }
 
-// RANKING
 function buildRanking(todayData) {
   const counts = {};
-  todayData.forEach(r => {
-    counts[r.Empleado] = (counts[r.Empleado] || 0) + 1;
-  });
-  return Object.entries(counts)
-    .sort((a, b) => b[1] - a[1])
-    .map(([name, count]) => ({ name, count }));
+  todayData.forEach(r => { counts[r.Empleado] = (counts[r.Empleado] || 0) + 1; });
+  return Object.entries(counts).sort((a,b) => b[1]-a[1]).map(([name,count]) => ({name,count}));
 }
 
-// PEDIDOS POR HORA
 function buildHourly(todayData) {
   const counts = {};
   HOURS.forEach(h => counts[h] = 0);
   todayData.forEach(r => {
-    const hora = r.Hora ? r.Hora.substring(0, 2) : null;
+    const hora = r.Hora ? r.Hora.substring(0,2) : null;
     if (hora && counts[hora] !== undefined) counts[hora]++;
   });
   return counts;
 }
 
-// RENDER RANKING
 function renderRanking(ranking) {
-  const el = document.getElementById('rankingList');
-  if (ranking.length === 0) {
-    el.innerHTML = '<div class="empty-state">Sin registros hoy todavía</div>';
-    return;
-  }
+  const el = document.getElementById("rankingList");
+  if (!ranking.length) { el.innerHTML = "<div class=\"empty-state\">Sin registros hoy todavía</div>"; return; }
   const max = ranking[0].count;
   el.innerHTML = ranking.map((emp, i) => {
-    const cls = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
-    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
-    const pct = Math.round((emp.count / max) * 100);
-    return `
-      <div class="ranking-item ${cls}">
-        <div class="rank-pos">${medal}</div>
-        <div class="rank-info">
-          <div class="rank-name">${emp.name}</div>
-          <div class="rank-bar-wrap"><div class="rank-bar" style="width:${pct}%"></div></div>
-        </div>
-        <div>
-          <div class="rank-count">${emp.count}</div>
-          <div class="rank-label">pedidos</div>
-        </div>
-      </div>`;
-  }).join('');
+    const cls = i===0?"top1":i===1?"top2":i===2?"top3":"";
+    const medal = i===0?"🥇":i===1?"🥈":i===2?"🥉":(i+1)+".";
+    const pct = Math.round((emp.count/max)*100);
+    const barCls = cls ? "" : "rank-bar-default";
+    return `<div class="ranking-item ${cls}">
+      <div class="rank-pos">${medal}</div>
+      <div class="rank-info">
+        <div class="rank-name">${emp.name}</div>
+        <div class="rank-bar-wrap"><div class="rank-bar ${barCls}" style="width:${pct}%"></div></div>
+      </div>
+      <div>
+        <div class="rank-count">${emp.count}</div>
+        <div class="rank-label">pedidos</div>
+      </div>
+    </div>`;
+  }).join("");
 }
 
-// RENDER STATS
 function renderStats(ranking, hourly) {
-  const total = ranking.reduce((s, e) => s + e.count, 0);
-  const prom = ranking.length > 0 ? Math.round(total / ranking.length) : 0;
-
-  let picoHora = '--', picoCount = 0;
-  Object.entries(hourly).forEach(([h, c]) => {
-    if (c > picoCount) { picoCount = c; picoHora = h + ':00'; }
-  });
-
-  document.getElementById('statTotal').textContent = total;
-  document.getElementById('statProm').textContent = prom;
-  document.getElementById('statPico').textContent = picoHora;
-  document.getElementById('statPicoSub').textContent = picoCount > 0 ? picoCount + ' pedidos' : 'sin datos';
+  const total = ranking.reduce((s,e) => s+e.count, 0);
+  const prom = ranking.length > 0 ? Math.round(total/ranking.length) : 0;
+  let picoHora="--", picoCount=0;
+  Object.entries(hourly).forEach(([h,c]) => { if(c>picoCount){picoCount=c;picoHora=h+":00";} });
+  document.getElementById("statTotal").textContent = total;
+  document.getElementById("statProm").textContent = prom;
+  document.getElementById("statPico").textContent = picoHora;
+  document.getElementById("statPicoSub").textContent = picoCount > 0 ? picoCount+" pedidos" : "sin datos";
 }
 
-// RENDER CHART
 function renderChart(hourly) {
-  const labels = HOURS.map(h => h + ':00');
-  const values = HOURS.map(h => hourly[h] || 0);
+  const labels = HOURS.map(h => h+":00");
+  const values = HOURS.map(h => hourly[h]||0);
   const colors = HOURS.map(h => {
-    if (LUNCH.includes(h)) return '#444';
-    if (EXTRA.includes(h)) return '#f59e0b';
-    return '#7c8cff';
+    if(LUNCH.includes(h)) return "#2a2a2a";
+    if(EXTRA.includes(h)) return "#f59e0b";
+    return "#e85d04";
+  });
+  const hovers = HOURS.map(h => {
+    if(LUNCH.includes(h)) return "#444";
+    if(EXTRA.includes(h)) return "#fcd34d";
+    return "#ff8c42";
   });
 
-  if (horaChart) {
+  if(horaChart) {
     horaChart.data.datasets[0].data = values;
     horaChart.data.datasets[0].backgroundColor = colors;
-    horaChart.update('none');
+    horaChart.data.datasets[0].hoverBackgroundColor = hovers;
+    horaChart.update("none");
     return;
   }
 
-  const ctx = document.getElementById('horaChart').getContext('2d');
+  const ctx = document.getElementById("horaChart").getContext("2d");
   horaChart = new Chart(ctx, {
-    type: 'bar',
+    type: "bar",
     data: {
       labels,
       datasets: [{
         data: values,
         backgroundColor: colors,
+        hoverBackgroundColor: hovers,
         borderRadius: 6,
         borderSkipped: false,
       }]
@@ -364,12 +332,17 @@ function renderChart(hourly) {
       plugins: {
         legend: { display: false },
         tooltip: {
+          backgroundColor: "#1e1e1e",
+          borderColor: "#e85d04",
+          borderWidth: 1,
+          titleColor: "#e85d04",
+          bodyColor: "#ccc",
           callbacks: {
-            label: ctx => ' ' + ctx.raw + ' pedidos',
+            label: ctx => "  " + ctx.raw + " pedidos",
             title: ctx => {
               const h = ctx[0].label.substring(0,2);
-              if (LUNCH.includes(h)) return ctx[0].label + ' (almuerzo)';
-              if (EXTRA.includes(h)) return ctx[0].label + ' (hora extra)';
+              if(LUNCH.includes(h)) return ctx[0].label + " (almuerzo)";
+              if(EXTRA.includes(h)) return ctx[0].label + " (hora extra)";
               return ctx[0].label;
             }
           }
@@ -377,12 +350,12 @@ function renderChart(hourly) {
       },
       scales: {
         x: {
-          grid: { color: '#2a2a4a' },
-          ticks: { color: '#888', font: { size: 11 } }
+          grid: { color: "#1e1e1e" },
+          ticks: { color: "#666", font: { size: 11 } }
         },
         y: {
-          grid: { color: '#2a2a4a' },
-          ticks: { color: '#888', font: { size: 11 }, stepSize: 1 },
+          grid: { color: "#1e1e1e" },
+          ticks: { color: "#666", font: { size: 11 }, stepSize: 1 },
           beginAtZero: true
         }
       }
@@ -390,20 +363,17 @@ function renderChart(hourly) {
   });
 }
 
-// ACTUALIZAR TODO
 async function refresh() {
   const data = await fetchData();
   const todayData = filterToday(data);
   const ranking = buildRanking(todayData);
   const hourly = buildHourly(todayData);
-
   renderRanking(ranking);
   renderStats(ranking, hourly);
   renderChart(hourly);
-
   const now = new Date();
-  document.getElementById('lastUpdate').textContent =
-    now.toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12: false });
+  document.getElementById("lastUpdate").textContent =
+    now.toLocaleTimeString("es-AR", { hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false });
 }
 
 refresh();
