@@ -152,7 +152,23 @@
 <canvas id="snapCanvas" style="display:none"></canvas>
 
 <script>
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwru6JSPaxeyNZCyYTiyFq8pXaMRvU3n9SR4ybwVbdF6nfVg6YmS2Q8c0n61M9V2ZC3Dw/exec';
+  const SHEETDB_URL = 'https://sheetdb.io/api/v1/gimbkaclxahvq';
+  const EMPLOYEES = [
+    { name: 'Lucas Borbas',        pin: '1111' },
+    { name: 'Gustavo Borbas',      pin: '2222' },
+    { name: 'Rodrigo Orellano',    pin: '3333' },
+    { name: 'Valentin Pedrozo',    pin: '4444' },
+    { name: 'Ignacio Cardozo',     pin: '5555' },
+    { name: 'Nicolas Cymbalisti',  pin: '6666' },
+    { name: 'Facundo Cabezas',     pin: '7777' },
+    { name: 'Alexis Ortega',       pin: '8888' },
+    { name: 'Lautaro Cano',        pin: '9999' },
+    { name: 'Mauro Vecchio',       pin: '1112' },
+    { name: 'Maximiliano Cicheli', pin: '1113' },
+    { name: 'Alan Gonzalez',       pin: '1114' },
+    { name: 'Martin Rodriguez',    pin: '1115' },
+    { name: 'Daniel Guerrero',     pin: '1116' }
+  ];
   const COLORS = ['#7c8cff','#22c55e','#f59e0b','#ec4899','#14b8a6','#a855f7','#e11d48','#0ea5e9','#84cc16','#f97316','#8b5cf6','#10b981','#f43f5e','#06b6d4'];
   let selEmp = null, curPin = '', curUser = null, orders = [];
   let videoStream = null, scanInterval = null, scanning = false;
@@ -170,13 +186,8 @@
     });
   }
 
-  async function loadEmployees() {
-    try {
-      const data = await jsonp(APPS_SCRIPT_URL + '?action=getEmployees');
-      buildGrid(data);
-    } catch(e) {
-      document.getElementById('empGrid').innerHTML = '<p style="color:red;font-size:13px;grid-column:span 2;text-align:center">Error al cargar. Recargá la página.</p>';
-    }
+  function loadEmployees() {
+    buildGrid(EMPLOYEES);
   }
 
   function buildGrid(employees) {
@@ -211,20 +222,18 @@
     for (let i=0;i<4;i++) document.getElementById('pd'+i).classList.toggle('filled', i < curPin.length);
   }
 
-  async function checkPin() {
-    try {
-      const ok = await jsonp(APPS_SCRIPT_URL + '?action=verifyPin&name=' + encodeURIComponent(selEmp.name) + '&pin=' + curPin);
-      if (ok) {
-        curUser = selEmp.name;
-        document.getElementById('welcomeName').textContent = 'Hola, ' + curUser.split(' ')[0] + ' 👋';
-        orders = []; document.getElementById('orderInput').value = '';
-        document.getElementById('confirmBtn').disabled = true;
-        renderList(); showScreen('screen-registro');
-      } else {
-        document.getElementById('pinWho').textContent = '❌ PIN incorrecto';
-        curPin = ''; updDots();
-      }
-    } catch(e) { showToast('Error de conexión'); curPin = ''; updDots(); }
+  function checkPin() {
+    const emp = EMPLOYEES.find(x => x.name === selEmp.name);
+    if (emp && emp.pin === curPin) {
+      curUser = selEmp.name;
+      document.getElementById('welcomeName').textContent = 'Hola, ' + curUser.split(' ')[0] + ' 👋';
+      orders = []; document.getElementById('orderInput').value = '';
+      document.getElementById('confirmBtn').disabled = true;
+      renderList(); showScreen('screen-registro');
+    } else {
+      document.getElementById('pinWho').textContent = '❌ PIN incorrecto';
+      curPin = ''; updDots();
+    }
   }
 
   function resetLogin() {
@@ -320,10 +329,17 @@
     const num = document.getElementById('orderInput').value.trim();
     document.getElementById('confirmBtn').disabled = true;
     document.getElementById('confirmBtn').textContent = 'Registrando...';
+    const now = new Date();
+    const fecha = now.toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit', year:'numeric' });
+    const hora  = now.toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
     try {
-      const data = await jsonp(APPS_SCRIPT_URL + '?action=registrar&nombre=' + encodeURIComponent(curUser) + '&pedido=' + encodeURIComponent(num));
-      if (data.ok) {
-        const now = new Date();
+      const res = await fetch(SHEETDB_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: { Fecha: fecha, Hora: hora, Empleado: curUser, 'Nro Pedido': num } })
+      });
+      const data = await res.json();
+      if (data.created === 1) {
         orders.unshift({ num, time: now.toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit' }) });
         document.getElementById('okNum').textContent = num;
         document.getElementById('orderInput').value = '';
