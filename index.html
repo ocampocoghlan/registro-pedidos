@@ -145,11 +145,21 @@
   let selEmp = null, curPin = '', curUser = null, orders = [];
   let codeReader = null;
 
-  // Cargar empleados desde Apps Script
+  // JSONP helper para evitar CORS con Apps Script
+  function jsonp(url) {
+    return new Promise((resolve, reject) => {
+      const cb = 'cb_' + Math.random().toString(36).slice(2);
+      window[cb] = data => { delete window[cb]; document.head.removeChild(s); resolve(data); };
+      const s = document.createElement('script');
+      s.src = url + '&callback=' + cb;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
   async function loadEmployees() {
     try {
-      const res = await fetch(APPS_SCRIPT_URL + '?action=getEmployees');
-      const data = await res.json();
+      const data = await jsonp(APPS_SCRIPT_URL + '?action=getEmployees');
       buildGrid(data);
     } catch(e) {
       document.getElementById('empGrid').innerHTML = '<p style="color:red;font-size:13px">Error al cargar empleados</p>';
@@ -190,8 +200,7 @@
 
   async function checkPin() {
     try {
-      const res = await fetch(`${APPS_SCRIPT_URL}?action=verifyPin&name=${encodeURIComponent(selEmp.name)}&pin=${curPin}`);
-      const ok = await res.json();
+      const ok = await jsonp(`${APPS_SCRIPT_URL}?action=verifyPin&name=${encodeURIComponent(selEmp.name)}&pin=${curPin}`);
       if (ok) {
         curUser = selEmp.name;
         document.getElementById('welcomeName').textContent = 'Hola, ' + curUser.split(' ')[0] + ' 👋';
@@ -268,8 +277,7 @@
     document.getElementById('confirmBtn').disabled = true;
     document.getElementById('confirmBtn').textContent = 'Registrando...';
     try {
-      const res = await fetch(`${APPS_SCRIPT_URL}?action=registrar&nombre=${encodeURIComponent(curUser)}&pedido=${encodeURIComponent(num)}`);
-      const data = await res.json();
+      const data = await jsonp(`${APPS_SCRIPT_URL}?action=registrar&nombre=${encodeURIComponent(curUser)}&pedido=${encodeURIComponent(num)}`);
       if (data.ok) {
         const now = new Date();
         orders.unshift({ num, time: now.toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit' }) });
