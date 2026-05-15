@@ -233,7 +233,11 @@ async function fetchData() {
 }
 
 function getToday() {
-  return new Date().toLocaleDateString("es-AR", { day:"2-digit", month:"2-digit", year:"numeric" });
+  const now = new Date();
+  const dd = String(now.getDate()).padStart(2,'0');
+  const mm = String(now.getMonth()+1).padStart(2,'0');
+  const yyyy = now.getFullYear();
+  return dd+'/'+mm+'/'+yyyy;
 }
 
 function filterToday(data) {
@@ -247,11 +251,30 @@ function buildRanking(todayData) {
   return Object.entries(counts).sort((a,b) => b[1]-a[1]).map(([name,count]) => ({name,count}));
 }
 
+function parseHour(horaStr) {
+  if (!horaStr) return null;
+  horaStr = horaStr.trim();
+  // Formato 24hs: "14:30:00"
+  if (/^\d{2}:\d{2}/.test(horaStr)) {
+    return horaStr.substring(0,2);
+  }
+  // Formato AM/PM: "02:14:33 p. m." o "2:14:33 PM"
+  const match = horaStr.match(/(\d+):(\d+).*?(a|p)[\.\s]?\s*m/i);
+  if (match) {
+    let h = parseInt(match[1]);
+    const isPM = match[3].toLowerCase() === 'p';
+    if (isPM && h !== 12) h += 12;
+    if (!isPM && h === 12) h = 0;
+    return String(h).padStart(2,'0');
+  }
+  return null;
+}
+
 function buildHourly(todayData) {
   const counts = {};
   HOURS.forEach(h => counts[h] = 0);
   todayData.forEach(r => {
-    const hora = r.Hora ? r.Hora.substring(0,2) : null;
+    const hora = parseHour(r.Hora);
     if (hora && counts[hora] !== undefined) counts[hora]++;
   });
   return counts;
