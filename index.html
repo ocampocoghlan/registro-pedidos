@@ -152,7 +152,7 @@
 <canvas id="snapCanvas" style="display:none"></canvas>
 
 <script>
-  const SHEETDB_URL = 'https://sheetdb.io/api/v1/gimbkaclxahvq';
+  const SHEETDB_URL = 'https://sheetdb.io/api/v1/oi23zwxnbbu67';
   const EMPLOYEES = [
     { name: 'Lucas Borbas',        pin: '1111' },
     { name: 'Gustavo Borbas',      pin: '2222' },
@@ -336,7 +336,7 @@
       const res = await fetch(SHEETDB_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: { Fecha: fecha, Hora: hora, Empleado: curUser, 'Nro Pedido': num } })
+        body: JSON.stringify({ data: { Fecha: fecha, Hora: hora, Empleado: curUser, NroPedido: num } })
       });
       const data = await res.json();
       if (data.created === 1) {
