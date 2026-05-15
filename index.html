@@ -330,8 +330,14 @@
     document.getElementById('confirmBtn').disabled = true;
     document.getElementById('confirmBtn').textContent = 'Registrando...';
     const now = new Date();
-    const fecha = now.toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit', year:'numeric' });
-    const hora  = now.toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    const dd = String(now.getDate()).padStart(2,'0');
+    const mm = String(now.getMonth()+1).padStart(2,'0');
+    const yyyy = now.getFullYear();
+    const hh = String(now.getHours()).padStart(2,'0');
+    const min = String(now.getMinutes()).padStart(2,'0');
+    const ss = String(now.getSeconds()).padStart(2,'0');
+    const fecha = dd+'/'+mm+'/'+yyyy;
+    const hora  = hh+':'+min+':'+ss;
     try {
       const res = await fetch(SHEETDB_URL, {
         method: 'POST',
@@ -340,7 +346,7 @@
       });
       const data = await res.json();
       if (data.created === 1) {
-        orders.unshift({ num, time: now.toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit' }) });
+        orders.unshift({ num, time: now.toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit', hour12: false }) });
         document.getElementById('okNum').textContent = num;
         document.getElementById('orderInput').value = '';
         document.getElementById('confirmBtn').textContent = '✓  Confirmar pedido';
